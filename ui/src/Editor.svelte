@@ -61,7 +61,7 @@
         }
       }
     }
-    console.log('input', event.key)
+    // console.log('input', event.key)
   }
   function handleClick(e) {
     const offset = window.getSelection().focusOffset
@@ -88,24 +88,19 @@
 </script>
 <style>
   editor {
-    width: auto;
-    min-height: 10em;
-    border: 1px solid black;
-    background-color: hsla(0, 0%, 100%, .6);
-    font-family: Arial;
+    min-height: 6em;
     display: block;
     white-space: pre-wrap;
-    margin: 1em 0 .4em 0;
-    padding: 4px;
   }
   .cursor {
     display: inline;
-    border-left: solid 2px; /* Should be the Folk's main color */
     margin-right: -2px;
     z-index: 10;
     position: relative;
   }
 </style>
-<editor on:click={handleClick} on:keydown={handleInput} tabindex=0 start=0 bind:this={editor}>
-  <span>{editor_content1}</span><span class='cursor' bind:this={cursor}></span><span>{editor_content2}</span>
-</editor>
+<div class="syn_editor">
+    <editor on:click={handleClick} on:keydown={handleInput} tabindex=0 start=0 bind:this={editor}>
+      <span>{editor_content1}</span><span class='cursor' bind:this={cursor}></span><span>{editor_content2}</span>
+  </editor>
+</div>

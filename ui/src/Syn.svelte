@@ -22,7 +22,7 @@
   const dispatch = createEventDispatcher()
 
   let appHost= process.env.APP_HOST || 'localhost'
-  let appPort=8888
+  let appPort=9000
   let appId='syn'
   async function toggle() {
     if (!$connection) {
@@ -63,44 +63,34 @@
   top: 0;
   left: 0;
   right: 0;
-  background: rgba(255, 255, 255, 0.7);
   }
-  input {
-    width: 4em;
-    //border: 2px solid red;
-    border-radius: 4px;
-  }
-  .session {
-    border-radius: 4px;
-    background-color: pink
-  }
-  button {
-    cursor: pointer;
-  }
-</style>
-<button class:noscribe on:click={commitChange}>Commit</button>
 
-<div>
-  <h4>Holochain Connection:</h4>
-  Host: <input bind:value={appHost}>
-  Port: <input bind:value={appPort}>
-  AppId: <input bind:value={appId}>
-  <button on:click={toggle}>
+</style>
+<button class="syn_commit" class:noscribe on:click={commitChange}>Save</button>
+
+<div class="syn_connection">
+  <label for="syn_host">Holochain Host:</label> <input id="syn_host" bind:value={appHost}>
+  <div class="row">
+    <div class="column_2"><label for="syn_port">Port:</label> <input id="syn_port" bind:value={appPort}></div>
+    <div class="column_2"><label for="syn_appid">AppId:</label> <input id="syn_appid" bind:value={appId}></div>
+  </div>
+  <button class="syn_connect" on:click={toggle}>
     {#if $connection}
       Disconnect
     {:else}
       Connect
     {/if}
   </button>
-</div>
 
-<div class='sessions'>
-  Sessions:
-  {#if sessions}
-  {#each sessions as session}
-    <span class='session'>
-      Id: {bufferToBase64(session).slice(-4)}
-    </span>
-  {/each}
-  {/if}
-</div>
+
+  <div class="syn_sessions">
+    {#if sessions}
+    {#each sessions as session}
+      <span class="syn_session">
+        Id: {bufferToBase64(session).slice(-4)}
+      </span>
+    {/each}
+    {/if}
+  </div>
+
+</div><!-- syn_connection Right Area -->

@@ -33,7 +33,13 @@ For more details read the [design documents](DESIGN.md), read the [article](http
 We have provided a sample UI that implements collaborative text editing in a minimal editor. To run this UI in test mode you can spin up two test instances of the dna using the `hc` dev tool like this:
 
 ```bash
-hc s gen -r=8888,8889 -a syn -n 2 network -b https://bootstrap-staging.holo.host quic
+hc sandbox generate \
+  --run=8888,8889 \
+  --app-id syn \
+  --num-sandboxes 2 \
+  network \
+    --bootstrap https://bootstrap-staging.holo.host \
+    quic
 ```
 Then you can run the UI with:
 

@@ -26,12 +26,12 @@ export class Zome {
 
   async call(fn_name, payload, timeout) {
     if (!this.attached()) {
-      console.log("Can't call zome when disconnected from conductor")
+      // console.log("Can't call zome when disconnected from conductor")
       return
     }
     try {
       const zome_name = 'syn'
-      console.log(`Making zome call ${fn_name} with:`, payload)
+      // console.log(`Making zome call ${fn_name} with:`, payload)
       const result = await this.appClient.callZome(
         {
           cap: null,
@@ -45,7 +45,7 @@ export class Zome {
       )
       return result
     } catch (error) {
-      console.log('ERROR: callZome threw error', error)
+      // console.log('ERROR: callZome threw error', error)
       throw(error)
       //  if (error == 'Error: Socket is not open') {
       // TODO        return doResetConnection(dispatch)
@@ -164,14 +164,14 @@ export class Session {
         if ((Date.now() - self.requested[0].at) > reqTimeout) {
           // for now let's just do the most drastic thing!
           /*
-            console.log('requested change timed out! Undoing all changes', $requestedChanges[0])
+            // console.log('requested change timed out! Undoing all changes', $requestedChanges[0])
             // TODO: make sure this is transactional and no requestChanges squeak in !
             while ($requestedChanges.length > 0) {
             requestedChanges.update(changes => {
             const change = changes.pop()
-            console.log('undoing ', change)
+            // console.log('undoing ', change)
             const undoDelta = undoFn(change)
-            console.log('undoDelta: ', undoDelta)
+            // console.log('undoDelta: ', undoDelta)
             applyDeltaFn(undoDelta)
             return changes
             })
@@ -181,7 +181,7 @@ export class Session {
           // TODO: prepare for shifting to new scribe if they went offline
 
           this.initState(await syn.getSession(self.sessionHash))
-          console.log("HERE")
+          // console.log("HERE")
           syn.sendSyncReq()
         }
       }
@@ -244,7 +244,7 @@ export class Session {
 
     this.initState(sessionInfo)
     this.initTimers(syn)
-    console.log('session joined:', sessionInfo)
+    // console.log('session joined:', sessionInfo)
 
   }
 
@@ -267,7 +267,7 @@ export class Session {
   // apply changes confirmed as recorded by the scribe while reconciling
   // and possibly rebasing our requested changes
   recordDeltas(index, deltas) {
-    console.log("recordDeltas REQUESTED", this.requested)
+    // console.log("recordDeltas REQUESTED", this.requested)
     for (const delta of deltas) {
       if (this.requested.length > 0) {
         // if this change is our next requested change then remove it
@@ -277,9 +277,9 @@ export class Session {
           this.requestedChanges.set(this.requested)
         } else {
           // TODO rebase?
-          console.log('REBASE NEEDED?')
-          console.log('requested ', this.requested[0].delta)
-          console.log('to be recorded ', delta)
+          // console.log('REBASE NEEDED?')
+          // console.log('requested ', this.requested[0].delta)
+          // console.log('to be recorded ', delta)
         }
       } else {
         // no requested changes so this must be from someone else so we don't have
@@ -332,7 +332,7 @@ export class Session {
         this.requested.push(undoableChange)
         this.requestedChanges.set(this.requested)
       }
-      console.log("REQUESTED", this.requested)
+      // console.log("REQUESTED", this.requested)
       this.sendChangeReq(index, deltas)
       this.reqCounter+= 1
     }
@@ -342,8 +342,8 @@ export class Session {
     let [index, deltas] = change
     const nextIndex = this.nextIndex()
     if (nextIndex != index) {
-      console.log('Scribe is receiving change out of order!')
-      console.log(`nextIndex: ${nextIndex}, changeIndex:${index} for deltas:`, deltas)
+      // console.log('Scribe is receiving change out of order!')
+      // console.log(`nextIndex: ${nextIndex}, changeIndex:${index} for deltas:`, deltas)
 
       if (index < nextIndex) {
         // change is too late, nextIndex has moved on
@@ -371,9 +371,9 @@ export class Session {
       this.commitInProgress = true
 
       const newContentHash = await this.hashContent(this._content)
-      console.log('commiting from snapshot', this.snapshotHashStr)
-      console.log('  prev_hash:', this.contentHashStr)
-      console.log('   new_hash:', bufferToBase64(newContentHash))
+      // console.log('commiting from snapshot', this.snapshotHashStr)
+      // console.log('  prev_hash:', this.contentHashStr)
+      // console.log('   new_hash:', bufferToBase64(newContentHash))
       const commit = {
         snapshot: this.snapshot_hash,
         change: {
@@ -399,7 +399,7 @@ export class Session {
         this.committedChanges.set(this.committed)
       }
       catch (e) {
-        console.log("Error:", e)
+        // console.log("Error:", e)
       }
       this.commitInProgress = false
     } else {
@@ -515,20 +515,20 @@ export class Session {
     if (this._scribeStr == this.me) {
       this.addChangeAsScribe(change)
     } else {
-      console.log("change requested but I'm not the scribe.")
+      // console.log("change requested but I'm not the scribe.")
     }
   }
 
   // handler for the change event
   change(index, deltas) {
     if (this._scribeStr == this.me) {
-      console.log("change received but I'm the scribe, so I'm ignoring this!")
+      // console.log("change received but I'm the scribe, so I'm ignoring this!")
     } else {
-      console.log(`change arrived for ${index}:`, deltas)
+      // console.log(`change arrived for ${index}:`, deltas)
       if (this.nextIndex() == index) {
         this.recordDeltas(index, deltas)
       } else {
-        console.log(`change arrived out of sequence nextIndex: ${this.nextIndex()}, change index:${index}`)
+        // console.log(`change arrived out of sequence nextIndex: ${this.nextIndex()}, change index:${index}`)
         // TODO either call for sync, or do some waiting algorithm
       }
     }
@@ -560,7 +560,7 @@ export class Session {
       this.sendFolkLore(this.folksForScribeSignals(), data)
     }
     else {
-      console.log("syncReq received but I'm not the scribe!")
+      // console.log("syncReq received but I'm not the scribe!")
     }
   }
 
@@ -571,16 +571,16 @@ export class Session {
     if (commitContentHashStr == this.contentHashStr) {
       this._recordDeltas(stateForSync.deltas)
     } else {
-      console.log('WHOA, sync response has different current state assumptions')
+      // console.log('WHOA, sync response has different current state assumptions')
       // TODO: resync somehow
     }
   }
 
   // handler for the heartbeat event
   heartbeat(from, data) {
-    console.log('got heartbeat', data, 'from:', from)
+    // console.log('got heartbeat', data, 'from:', from)
     if (this._scribeStr != this.me) {
-      console.log("heartbeat received but I'm not the scribe.")
+      // console.log("heartbeat received but I'm not the scribe.")
     }
     else {
       // I am the scribe and I've recieved a heartbeat from a concerned Folk
@@ -590,9 +590,9 @@ export class Session {
 
   // handler for the folklore event
   folklore(data) {
-    console.log('got folklore', data)
+    // console.log('got folklore', data)
     if (this._scribeStr == this.me) {
-      console.log("folklore received but I'm the scribe!")
+      // console.log("folklore received but I'm the scribe!")
     }
     else {
       if (data.gone) {
@@ -625,12 +625,12 @@ export class Session {
       this.committedChanges.set(this.committed)
       this.recordedChanges.set(this.recorded)
     } else {
-      console.log('received commit notice for beyond our last commit, gotta resync')
-      console.log('commit.commit_content_hash:', bufferToBase64(commitInfo.commit_content_hash))
-      console.log('commit.previous_content_hash:', bufferToBase64(commitInfo.previous_content_hash))
-      console.log('commit.deltas_committed:', commitInfo.deltas_committed)
-      console.log('my $session.contentHashStr', this.contentHashStr)
-      console.log('my nextIndex', this.nextIndex())
+      // console.log('received commit notice for beyond our last commit, gotta resync')
+      // console.log('commit.commit_content_hash:', bufferToBase64(commitInfo.commit_content_hash))
+      // console.log('commit.previous_content_hash:', bufferToBase64(commitInfo.previous_content_hash))
+      // console.log('commit.deltas_committed:', commitInfo.deltas_committed)
+      // console.log('my $session.contentHashStr', this.contentHashStr)
+      // console.log('my nextIndex', this.nextIndex())
       // TODO resync
     }
   }
@@ -651,7 +651,7 @@ export class Connection {
       30000,
       (signal) => signalHandler(self, signal))
 
-    console.log('connection established:', this)
+    // console.log('connection established:', this)
 
     // TODO: in the future we should be able manage and to attach to multiple syn happs
     this.syn = new Syn(defaultContent, applyDeltaFn, this.appClient, this.appId)
@@ -661,7 +661,7 @@ export class Connection {
 
   async joinSession() {
     if (!this.syn ) {
-      console.log("join session called without syn app opened")
+      // console.log("join session called without syn app opened")
       return
     }
     if (this.sessions.length == 0) {
@@ -682,7 +682,7 @@ function signalHandler(connection, signal) {
   if (!connection.syn || bufferToBase64(signal.data.cellId[1]) != connection.syn.me) {
     return
   }
-  console.log('Got Signal', signal.data.payload.signal_name, signal)
+  // console.log('Got Signal', signal.data.payload.signal_name, signal)
   switch (signal.data.payload.signal_name) {
   case 'SyncReq':
     connection.session.syncReq({from: signal.data.payload.signal_payload})
