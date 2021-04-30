@@ -4,7 +4,7 @@
   import Folks from './Folks.svelte'
   import Syn from './Syn.svelte'
   import Debug from './Debug.svelte'
-  import History from './History.svelte'
+  // import History from './History.svelte'
   import { content, scribeStr } from './stores.js'
 
   $: disconnected = false
@@ -292,26 +292,25 @@
   <script src='https://kit.fontawesome.com/80d72fa568.js' crossorigin='anonymous'></script>
 </svelte:head>
 
-<div class='toolbar'>
-  <h1>SynText</h1>
-<div class:noscribe>
-    <Title on:requestChange={(event) => syn.requestChange(event.detail)}/>
-</div>
-</div>
+<!-- <div class='toolbar'> -->
+  <!-- <h1>SynText</h1> -->
+  <!-- <div class:noscribe>
+      <Title on:requestChange={(event) => syn.requestChange(event.detail)}/>
+  </div> -->
+<!-- </div> -->
 <main>
-<div class:noscribe>
-  <Editor on:requestChange={(event) => syn.requestChange(event.detail)}/>
-</div>
+  <div class:noscribe>
+    <Editor on:requestChange={(event) => syn.requestChange(event.detail)}/>
+  </div>
 
-
-<Syn applyDeltaFn={applyDelta} undoFn={undo} bind:this={syn} />
+  <Syn applyDeltaFn={applyDelta} undoFn={undo} bind:this={syn} />
 </main>
 
 <div class='folks-tray'>
   <Folks />
 </div>
 
-<div class='tab' class:shown={tabShown} class:drawer-hidden={drawerHidden} on:mouseenter={showTab} on:mouseleave={hideTab}>
+<!-- <div class='tab' class:shown={tabShown} class:drawer-hidden={drawerHidden} on:mouseenter={showTab} on:mouseleave={hideTab}>
   <div class='tab-inner' class:shown={tabShown} on:click={drawerHidden ? showDrawer() : hideDrawer()}>
     <i class:drawer-hidden={drawerHidden} class="tab-icon fas {drawerHidden ? 'fa-chevron-up' : 'fa-chevron-down'}"></i>
   </div>
@@ -322,4 +321,4 @@
     <History changeToTextFn={changeToText}/>
     <Debug />
   </div>
-</div>
+</div> -->

@@ -89,7 +89,7 @@
 <style>
   editor {
     width: auto;
-    min-height: 10em;
+    min-height: 4em;
     border: 1px solid black;
     background-color: hsla(0, 0%, 100%, .6);
     font-family: Arial;
