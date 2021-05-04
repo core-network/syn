@@ -18,7 +18,6 @@ nuke() {
   ( set -x && killall -9 $name ) || true
 }
 
-which hc || die "ERROR: executable 'hc' not found in PATH: $PATH"
 which socat || die "ERROR: executable 'socat' not found in PATH: $PATH"
 
 nuke hc
@@ -26,7 +25,7 @@ nuke holochain
 nuke lair-keystore
 nuke socat
 
-sandboxes=${1:-2}  # default to 2
+sandboxes=${1:-10}  # default
 port_increment=1
 min_port=8000
 max_port=$(( min_port + (sandboxes - 1) * port_increment ))
@@ -37,12 +36,16 @@ for localhost_port in $(seq $min_port $port_increment $max_port); do
 done
 
 ports=$(seq -s , $min_port $port_increment $max_port)
-set -x
-hc sandbox generate \
-  --run=${ports} \
-  --app-id syn \
-  --num-sandboxes ${sandboxes} \
-  --root tmp \
-  network \
-    --bootstrap https://bootstrap-staging.holo.host \
+hc_command=$( echo "hc sandbox generate
+  --run=${ports}
+  --app-id syn
+  --num-sandboxes ${sandboxes}
+  --root tmp
+  network
+    --bootstrap https://bootstrap-staging.holo.host
     quic
+  " | tr '\n' ' ' )
+
+. /home/dev/.nix-profile/etc/profile.d/nix.sh
+set -x
+nix-shell --run "${hc_command}"
