@@ -13,12 +13,18 @@ set -euo pipefail
 # die "exit with this error message"
 die() { echo "$*" 1>&2 ; exit 1; }
 
+nuke() {
+  name=$1
+  ( set -x && killall -9 $name ) || true
+}
+
 which hc || die "ERROR: executable 'hc' not found in PATH: $PATH"
 which socat || die "ERROR: executable 'socat' not found in PATH: $PATH"
 
-# use the nuclear option:
-killall hc || true
-killall socat || true
+nuke hc
+nuke holochain
+nuke lair-keystore
+nuke socat
 
 sandboxes=${1:-2}  # default to 2
 port_increment=1
