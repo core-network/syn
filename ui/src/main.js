@@ -1,17 +1,22 @@
 import App from './App.svelte'
 import Mirror from './Mirror.svelte'
 
-const app = new App({
-  target:
-    document.getElementById('core_panel_bottom_app') || // if embedded
-    document.body, // if being served standalone
-  props: {},
-})
+let appElement
+if (process.env.APP_ELEMENT_ID) {
+  const appElementId = process.env.APP_ELEMENT_ID
+  appElement = document.getElementById(appElementId)
+  if (!appElement) throw new Error(`No DOM element found with ID: '${appElementId}'`)
+} else {
+  appElement = document.body
+}
 
-new Mirror({
-  target:
-    document.getElementById('core_panel_bottom_addition_app') ,
-  props: {},
-})
+const app = new App({ target: appElement })
+
+if (process.env.MIRROR_ELEMENT_ID) {
+  const mirrorId = process.env.MIRROR_ELEMENT_ID
+  const mirrorElement = document.getElementById(mirrorId)
+  if (!mirrorElement) throw new Error(`No DOM element found with ID: '${mirrorId}'`)
+  new Mirror({ target: mirrorElement })
+}
 
 export default app
