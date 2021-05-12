@@ -1,3 +1,7 @@
+div.syn_content_mirror {
+  white-space: pre-wrap;
+}
+
 div#core_panel_bottom_app {
   display: block;
   position: relative;
